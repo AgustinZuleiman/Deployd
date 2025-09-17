@@ -24,8 +24,8 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          # GHCR requiere nombres en minúsculas: dejamos el repo en lower-case
-          images: ghcr.io/${{ github.repository_owner }}/deployd
+          # 👇 todo en minúsculas (owner + repo)
+          images: ghcr.io/${{ toLower(github.repository_owner) }}/deployd
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=sha
