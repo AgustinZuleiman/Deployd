@@ -19,18 +19,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # ⬇️ ESTE ES EL BLOQUE QUE CAMBIAMOS
       - name: Docker meta (tags y labels)
         id: meta
         uses: docker/metadata-action@v5
         with:
-          # 👇 todo en minúsculas (owner + repo)
-          images: ghcr.io/${{ toLower(github.repository_owner) }}/deployd
+          images: ghcr.io/agustinzuleiman/deployd   # TODO minúsculas
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=sha
             type=ref,event=tag
             type=ref,event=branch
+
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
