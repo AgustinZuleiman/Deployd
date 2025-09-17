@@ -58,5 +58,5 @@ jobs:
       - name: Resumen
         run: |
           echo "### 🐳 Imagen publicada en GHCR" >> $GITHUB_STEP_SUMMARY
-          echo "ghcr.io/${{ github.repository_owner }}/deployd" >> $GITHUB_STEP_SUMMARY
+          echo "ghcr.io/agustinzuleiman/deployd" >> $GITHUB_STEP_SUMMARY
           echo "${{ steps.meta.outputs.tags }}" | sed 's/,/\n/g' >> $GITHUB_STEP_SUMMARY
