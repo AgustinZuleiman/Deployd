@@ -2,14 +2,13 @@
   "name": "tarea9",
   "version": "0.1.0",
   "private": true,
-"scripts": {
-  "dev": "next dev --turbopack",
-  "build": "next build",
-  "start": "next start",
-  "lint": "eslint",
-  "test": "vitest run"
-}
-
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "test": "vitest run"
+  },
   "dependencies": {
     "next": "15.5.2",
     "react": "19.1.0",
