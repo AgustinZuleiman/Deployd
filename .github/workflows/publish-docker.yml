@@ -2,8 +2,9 @@ name: Publish Docker (GHCR)
 
 on:
   push:
-    branches: ['main']        # si usás 'master', cambialo
-    tags: ['v*.*.*']          # opcional
+    branches: ['main']
+    tags: ['v*.*.*']
+  workflow_dispatch: {}
 
 permissions:
   contents: read
@@ -14,11 +15,9 @@ permissions:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Docker meta (tags y labels)
         id: meta
         uses: docker/metadata-action@v5
@@ -29,21 +28,16 @@ jobs:
             type=sha
             type=ref,event=tag
             type=ref,event=branch
-
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
-
       - name: Set up Buildx
         uses: docker/setup-buildx-action@v3
-
       - name: Login to GHCR
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Build & Push
         uses: docker/build-push-action@v6
         with:
@@ -54,9 +48,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
       - name: Resumen
         run: |
           echo "### 🐳 Imagen publicada en GHCR" >> $GITHUB_STEP_SUMMARY
-          echo "ghcr.io/${{ github.repository_owner }}/deployd" >> $GITHUB_STEP_SUMMARY
+          echo "ghcr.io/agustinzuleiman/deployd" >> $GITHUB_STEP_SUMMARY
           echo "${{ steps.meta.outputs.tags }}" | sed 's/,/\n/g' >> $GITHUB_STEP_SUMMARY

@@ -7,24 +7,45 @@ permissions:
 concurrency:
   group: pr-build-${{ github.ref }}
   cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 20
           cache: 'npm'
-      - run: npm ci
-      - uses: actions/cache@v4
+
+      - name: Debug env
+        run: |
+          set -euxo pipefail
+          node -v
+          npm -v
+          pwd
+          ls -la
+          cat package.json
+
+      - name: Install deps (verbose)
+        run: npm ci --no-audit --fund=false --loglevel=verbose
+
+      - name: Cache Next.js build cache
+        uses: actions/cache@v4
         with:
           path: .next/cache
           key: ${{ runner.os }}-next-cache-${{ hashFiles('**/package-lock.json') }}
           restore-keys: ${{ runner.os }}-next-cache-
-      - env:
+
+      - name: Build (Next.js)
+        env:
           NEXT_TELEMETRY_DISABLED: 1
-        run: npm run build
+          CI: true
+        run: npx next build
+
       - if: success()
         run: echo "### ✅ Build OK" >> $GITHUB_STEP_SUMMARY
       - if: failure()
