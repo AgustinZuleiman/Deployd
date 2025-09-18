@@ -37,7 +37,7 @@ Esto garantiza calidad y despliegue automatizado en cada cambio.
 
 ## Deploy
 
-La aplicación está desplegada en [Vercel](https://vercel.com/), lo que permite actualizaciones automáticas con cada push a la rama principal. El deploy es rápido y sin configuración adicional gracias a la integración nativa de Next.js con Vercel.
+La aplicación está desplegada en [Vercel]([https://vercel.com/](https://esteeselbueno-one.vercel.app/)), lo que permite actualizaciones automáticas con cada push a la rama principal. El deploy es rápido y sin configuración adicional gracias a la integración nativa de Next.js con Vercel.
 
 ## Cómo correr localmente
 
