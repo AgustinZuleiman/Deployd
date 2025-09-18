@@ -7,24 +7,37 @@ permissions:
 concurrency:
   group: pr-tests-${{ github.ref }}
   cancel-in-progress: true
+
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
-      - name: Print versions
+
+      - name: Debug env
         run: |
+          set -euxo pipefail
           node -v
           npm -v
-      - run: npm ci --no-audit --fund=false
+          pwd
+          ls -la
+          cat package.json
+
+      - name: Install deps (verbose)
+        run: npm ci --no-audit --fund=false --loglevel=verbose
+
       - name: Run tests (Vitest)
         env:
           CI: true
-        run: npm test
+        run: npm test -- --reporter=basic
+
       - if: success()
         run: echo "### ✅ Tests OK" >> $GITHUB_STEP_SUMMARY
       - if: failure()
