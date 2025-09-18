@@ -16,8 +16,13 @@ jobs:
         with:
           node-version: 20
           cache: 'npm'
-      - run: npm ci
-      - env:
+      - name: Print versions
+        run: |
+          node -v
+          npm -v
+      - run: npm ci --no-audit --fund=false
+      - name: Run tests (Vitest)
+        env:
           CI: true
         run: npm test
       - if: success()
