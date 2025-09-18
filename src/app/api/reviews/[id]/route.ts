@@ -1,8 +1,9 @@
-import { NextResponse, type NextRequest } from "next/server";
+// src/app/api/reviews/[id]/route.ts
+import { NextResponse } from "next/server";
+import { z } from "zod";
 import { connectToDB } from "@/lib/db";
 import Review from "@/models/Review";
-import { z } from "zod";
-import { requireAuth } from "@/lib/withAuth";
+import requireAuth from "@/lib/withAuth";
 
 const updateSchema = z.object({
   rating: z.number().min(1).max(5).optional(),
@@ -10,7 +11,8 @@ const updateSchema = z.object({
 });
 
 export const PATCH = requireAuth(async ({ userId }, req) => {
-  const id = new URL(req.url).pathname.split("/").pop()!;
+  const { pathname } = new URL(req.url);
+  const id = pathname.split("/").pop()!;
   const body = await req.json();
   const data = updateSchema.parse(body);
 
@@ -26,8 +28,8 @@ export const PATCH = requireAuth(async ({ userId }, req) => {
 });
 
 export const DELETE = requireAuth(async ({ userId }, req) => {
-  const id = new URL(req.url).pathname.split("/").pop()!;
-
+  const { pathname } = new URL(req.url);
+  const id = pathname.split("/").pop()!;
   await connectToDB();
   const review = await Review.findById(id);
   if (!review) return NextResponse.json({ error: "Not found" }, { status: 404 });

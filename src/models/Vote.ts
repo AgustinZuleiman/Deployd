@@ -1,11 +1,21 @@
-import { Schema, models, model, Types } from "mongoose";
+// src/models/Vote.ts
+import mongoose, { Schema, Model, InferSchemaType } from "mongoose";
 
-const VoteSchema = new Schema({
-  reviewId: { type: Types.ObjectId, ref: "Review", required: true, index: true },
-  userId: { type: Types.ObjectId, ref: "User", required: true, index: true },
-  value: { type: Number, enum: [1, -1], required: true },
-  createdAt: { type: Date, default: Date.now },
-});
-VoteSchema.index({ reviewId: 1, userId: 1 }, { unique: true });
+const VoteSchema = new Schema(
+  {
+    userId: { type: Schema.Types.ObjectId, ref: "Users", required: true, index: true },
+    reviewId: { type: Schema.Types.ObjectId, ref: "Review", required: true, index: true },
+    value: { type: Number, enum: [-1, 1], required: true },
+  },
+  { timestamps: true }
+);
 
-export default models.Vote || model("Vote", VoteSchema);
+// 1 voto por usuario por review
+VoteSchema.index({ userId: 1, reviewId: 1 }, { unique: true });
+
+export type VoteDoc = InferSchemaType<typeof VoteSchema> & {
+  _id: mongoose.Types.ObjectId;
+};
+
+export default (mongoose.models.Vote as Model<VoteDoc>) ||
+  mongoose.model<VoteDoc>("Vote", VoteSchema);

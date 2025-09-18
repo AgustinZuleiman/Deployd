@@ -1,19 +1,14 @@
+// src/lib/db.ts
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGODB_URI as string;
-if (!MONGODB_URI) throw new Error("MONGODB_URI not set");
+const uri = process.env.MONGODB_URI!;
+if (!uri) throw new Error("MONGODB_URI missing");
 
-type GlobalWithMongoose = typeof globalThis & {
-  _mongooseConn?: Promise<typeof mongoose>;
-};
+let conn: typeof mongoose | null = null;
 
-let g = global as GlobalWithMongoose;
-
-export function connectToDB() {
-  if (!g._mongooseConn) {
-    g._mongooseConn = mongoose.connect(MONGODB_URI, {
-      dbName: "booksapp",
-    });
-  }
-  return g._mongooseConn;
+export async function connectToDB() {
+  if (conn) return conn;
+  if (mongoose.connection.readyState === 1) return mongoose;
+  conn = await mongoose.connect(uri, { dbName: "BooksDB" });
+  return conn;
 }

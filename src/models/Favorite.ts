@@ -1,10 +1,14 @@
-import { Schema, models, model, Types } from "mongoose";
+// src/models/Favorite.ts
+import { Schema, model, models, Types } from "mongoose";
 
-const FavoriteSchema = new Schema({
-  userId: { type: Types.ObjectId, ref: "User", required: true, index: true },
-  bookId: { type: String, required: true, index: true },
-  createdAt: { type: Date, default: Date.now },
-});
+const FavoriteSchema = new Schema(
+  {
+    userId: { type: Types.ObjectId, ref: "User", required: true, index: true },
+    bookId: { type: String, required: true, index: true },
+  },
+  { timestamps: true }
+);
+
 FavoriteSchema.index({ userId: 1, bookId: 1 }, { unique: true });
 
 export default models.Favorite || model("Favorite", FavoriteSchema);
