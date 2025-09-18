@@ -1,39 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+# Deployd
 
-First, run the development server:
+Proyecto realizado con [Next.js](https://nextjs.org) y TypeScript, estructurado con el sistema de rutas App Router. Incluye autenticación JWT, manejo de usuarios, libros y reviews, y está preparado para despliegue continuo con GitHub Actions y Vercel.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Estructura principal
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- `/src/app`: Rutas de la aplicación (páginas y API).
+- `/src/components`: Componentes reutilizables (BookList, BookDetail, SearchBar, NavBar, etc).
+- `/src/models`: Modelos de datos (Users, Review, Favorite, Vote).
+- `/src/lib`: Lógica de autenticación y helpers (auth, db, withAuth).
+- `/src/hooks`: Hooks personalizados para lógica de búsqueda y manejo de estado.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Autenticación
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+La autenticación se maneja con JWT. El helper `src/lib/auth.ts` provee funciones para firmar tokens, leer cookies y verificar usuarios. El flujo de login y registro está implementado en `/src/app/auth`.
 
-## Learn More
+## Testing
 
-To learn more about Next.js, take a look at the following resources:
+El proyecto incluye tests con Vitest para hooks y componentes, ubicados en `src/__tests__` y junto a los componentes.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Scripts principales
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `npm run dev`: Levanta el servidor de desarrollo.
+- `npm run build`: Compila la app para producción.
+- `npm test`: Ejecuta los tests con Vitest.
 
-## Deploy on Vercel
+## GitHub Actions
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+El proyecto cuenta con integración continua (CI) mediante tres workflows:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **PR — Build (`.github/workflows/pr-build.yml`)**: Compila la app en cada Pull Request para asegurar que no haya errores de build.
+- **PR — Tests (`.github/workflows/pr-tests.yml`)**: Ejecuta los tests automáticamente en cada Pull Request.
+- **Publish Docker (`.github/workflows/publish-docker.yml`)**: Al hacer push a `main` o crear un tag, construye y publica una imagen Docker en GitHub Container Registry (GHCR).
 
-CI demo
-Ci demo 2
+Esto garantiza calidad y despliegue automatizado en cada cambio.
+
+## Deploy
+
+La aplicación está desplegada en [Vercel](https://vercel.com/), lo que permite actualizaciones automáticas con cada push a la rama principal. El deploy es rápido y sin configuración adicional gracias a la integración nativa de Next.js con Vercel.
+
+## Cómo correr localmente
+
+1. Instala dependencias:
+	```bash
+	npm install
+	```
+2. Crea un archivo `.env.local` con tus variables de entorno (por ejemplo, `JWT_SECRET`).
+3. Inicia el servidor:
+	```bash
+	npm run dev
+	```
+4. Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
